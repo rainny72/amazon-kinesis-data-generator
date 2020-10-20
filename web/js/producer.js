@@ -268,7 +268,7 @@ function init(){
         pi2.append(tr)
         var th = $( "<th scope='row'>"+j+"</th>" )
         tr.append(th)
-        for(var k = 0; k <= 1; k++) {
+        for(var k = 0; k <= 5; k++) {
             var td = $ ( "<td />")
             tr.append(td)
             mID = k+"-"+j+"-mu"
