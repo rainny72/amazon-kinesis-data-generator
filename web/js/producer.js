@@ -448,12 +448,16 @@ function init(){
 
     function* createPeriodicDataGenerator(startTime, endTime, tickCount) {
         var simTime = startTime
+        console.log("start at " + startTime + ", end at " + endTime)
         while(simTime <= endTime) {
             var recordsToPush = []
             for(i = 0; i<tickCount; i++) 
             {
                 faker.simTime = moment(simTime)
-                createDataPeriodicForTime(simTime, recordsToPush)
+                if(currRate == "Day Periodic")
+                    createDataPeriodicForTime(simTime, recordsToPush)
+                else
+                    createDataPeriodicForTimePerHour(simTime, recordsToPush)
                 simTime.setSeconds(simTime.getSeconds() + 1)
             }
             sendToKinesis(recordsToPush)
@@ -824,6 +828,7 @@ function init(){
 
     function createDataPeriodicForTimePerHour(dateTime, recordsToPush) {
         if(typeof recordsToPush === "undefined") {
+            console.log("undefined records")
             recordsToPush = []
         }
         var now = dateTime;
@@ -873,6 +878,7 @@ function init(){
             sigma = adjustForMinute(sigma, minute, nextSigma)
         }
 
+        console.log("generate preiodic data")
         generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
