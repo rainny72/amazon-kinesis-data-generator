@@ -480,8 +480,15 @@ function init(){
     {
         recordsToPush = []
         //check day periodic or hour periodic
-        //createDataPeriodicForTime(new Date(), recordsToPush)
-        createDataPeriodicForTimePerHour(new Date(), recordsToPush)
+        var currRate = $("ul#rate-tabs li.active").text()
+        if(currRate.is('Day Periodic')) {
+            console.log("Create Data Periodic for "+currRate)
+            createDataPeriodicForTime(new Date(), recordsToPush)
+        }
+        else {
+            console.log("Create Data Periodic for "+currRate)
+            createDataPeriodicForTimePerHour(new Date(), recordsToPush)
+        }
         sendToKinesis(recordsToPush)
         $("#recordsSentMessage").text(totalRecordsSent.toString() + " records sent to Kinesis.");
     }
