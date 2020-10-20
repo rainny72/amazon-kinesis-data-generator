@@ -423,7 +423,7 @@ function init(){
 
         if (currRate == "Constant") {
             sendDataHandle = setInterval(createDataConstant, 1000);
-        } else if (currRate == "Periodic") {
+        } else { //if (currRate == "Periodic") {
             var lockRealTime = $("#lockrealtime").is(":checked")
             if(lockRealTime) {
                 sendDataHandle = setInterval(createDataPeriodic, 1000);
