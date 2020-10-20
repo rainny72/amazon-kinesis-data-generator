@@ -129,6 +129,7 @@
                             <ul class="nav nav-tabs" id="rate-tabs">
                                 <li class="rate-tab nav-item active"><a href="#constant-rate-tab" id="rate-tab-0" class="nav-link active">Constant</a></li>
                                 <li class="rate-tab nav-item"><a href="#periodic-rate-tab" id="rate-tab-1" class="nav-link active">Periodic</a></li>
+                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab2" id="rate-tab-2" class="nav-link active">Short Periodic</a></li>
                             </ul>
                             <div id="constant-rate-tab" class="tab-content" style="padding-top: 20px">
                                 <input type="number" min="1" max="2000" step="1" class="form-control" id="putRate" placeholder="Kinesis Stream Name" value="100" />
@@ -232,6 +233,88 @@
                                         <tbody id="periodic-inputs">
                                         </tbody>
                                     </table>
+                                </div>
+                            </div>
+                            <!-- Loat Test Pattern rate tab -->
+                            <div id="periodic-rate-tab2" class="container-fluid" style="padding-top: 20px">
+                                <div class="form-group row">
+                                    <label for="smoothing" class="col-md-2 col-form-label">Intra-hour smoothing</label>
+                                    <div class="col-md-4">
+                                        <input type="checkbox" class="form-check-input" id="smoothing" checked />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="lockrealtime" class="col-md-2 col-form-label">Lock to real time</label>
+                                    <div class="col-md-4">
+                                        <input type="checkbox" class="form-check-input" id="lockrealtime" checked/>
+                                    </div>
+                                </div>
+                                <!-- Non-real-time start and end times selectors -->
+                                <div id="startendtimes2" style="display:none">
+                                    <div class="container" id="startTimeDiv" class="form-group row">
+                                            <label for="starttime" class="col-md-2 col-form-label">Start Time</label>
+                                            <div class="row">
+                                                <div class='col-sm-3'>
+                                                    <div class="form-group">
+                                                        <div class='input-group date' id='starttime'>
+                                                            <input type='text' class="form-control" id="starttimetime"/>
+                                                            <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <script type="text/javascript">
+                                                    $(function () {
+                                                        $('#starttime').datetimepicker();
+                                                    });
+                                                </script>
+                                            </div>
+                                    </div>
+                                    <div class="container" id="endTimeDiv" class="form-group row">
+                                            <label for="endtime" class="col-md-2 col-form-label">End Time</label>
+                                            <div class="row">
+                                                <div class='col-sm-3'>
+                                                    <div class="form-group">
+                                                        <div class='input-group date' id='endtime'>
+                                                            <input type='text' class="form-control" />
+                                                            <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <script type="text/javascript">
+                                                    $(function () {
+                                                        $('#endtime').datetimepicker();
+                                                    });
+                                                </script>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="tick-count" class="col-md-2 col-form-label">Seconds of data per tick</label>
+                                    <div>
+                                        <div clas="col-md-4">
+                                            <div class='form-group'>
+                                                <div class="input-group">
+                                                    <input type="number" min="1" max="2000" step="1" class="form-control" id="tick-count" placeholder="periodic-put-rate" value="5" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label for="tick-wait" class="col-md-2 col-form-label">Wait between ticks</label>
+                                    <div>
+                                        <div clas="col-md-4">
+                                            <div class='form-group'>
+                                                <div class="input-group">
+                                                    <input type="number" min="1" max="2000" step="1" class="form-control" id="tick-wait" placeholder="periodic-put-rate" value="100" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- Add 1 Hour Test Pattern -->
                                 <div id="rateParmTable2">
