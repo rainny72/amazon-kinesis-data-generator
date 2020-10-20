@@ -481,7 +481,7 @@ function init(){
         recordsToPush = []
         //check day periodic or hour periodic
         var currRate = $("ul#rate-tabs li.active").text()
-        if(currRate.is('Day Periodic')) {
+        if(currRate == "Day Periodic") {
             console.log("Create Data Periodic for "+currRate)
             createDataPeriodicForTime(new Date(), recordsToPush)
         }
