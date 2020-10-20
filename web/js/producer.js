@@ -460,6 +460,7 @@ function init(){
                     createDataPeriodicForTimePerHour(simTime, recordsToPush)
                 simTime.setSeconds(simTime.getSeconds() + 1)
             }
+            console.log("send to kinesis : " + recordsToPush)
             sendToKinesis(recordsToPush)
             $("#recordsSentMessage").text(totalRecordsSent.toString() + " records sent to Kinesis.  SimTime: "+simTime.toString());
             yield simTime;
