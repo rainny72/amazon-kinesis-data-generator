@@ -797,6 +797,7 @@ function init(){
             records = [];
     
         var template = getCleanedTemplate();
+        console.log("generate data as " + template)
     
         for(var n = 0; n < count; n++) {
             var data = faker.fake(template);
