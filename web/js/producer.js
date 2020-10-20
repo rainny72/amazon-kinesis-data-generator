@@ -262,23 +262,25 @@ function init(){
     }
 
     // 1 hour load generate. Separeate with 10 minutes. 1hour 6 step
-    var pi2 = $("#periodic-inputs2")
-    for(var j = 0; j <= 5; j++) {
+    var pi2 = $("#periodic-inputs2") 
+    for(var j = 0; j <= 5; j++) {   //every 10 minutes
         var tr = $( "<tr /> " )
         pi2.append(tr)
         var th = $( "<th scope='row'>"+j+"</th>" )
         tr.append(th)
-        for(var k = 0; k <= 5; k++) {
+        for(var k = 0; k <= 0; k++) {   //just for 1 hour
             var td = $ ( "<td />")
             tr.append(td)
-            mID = k+"-"+j+"-mu"
-            mInput = $( "<small>Mu:</small><input type='number' min='0' class='form-control' id='"+mID+"' value='100'/>" )
+            //mID = k+"-"+j+"-mu"     //hour-min-hour
+            mID2 = j+"-mu" 
+            mInput = $( "<small>Mu:</small><input type='number' min='0' class='form-control' id='"+mID2+"' value='100'/>" )
             td.append(mInput)
-            $("#"+mID).blur(savePeriodsPerHour)
-            sID = k+"-"+j+"-sig"
-            sInput = $( "<small>Sigma:</small><input type='number' min='0' class='form-control' id='"+sID+"' value='10'/>" )
+            $("#"+mID2).blur(savePeriodsPerHour)
+            //sID = k+"-"+j+"-sig"
+            sID2 = j+"-sig"
+            sInput = $( "<small>Sigma:</small><input type='number' min='0' class='form-control' id='"+sID2+"' value='10'/>" )
             td.append(sInput)
-            $("#"+sID).blur(savePeriodsPerHour)
+            $("#"+sID2).blur(savePeriodsPerHour)
         }
     }
 
@@ -765,18 +767,20 @@ function init(){
 
     function savePeriodsPerHour() {
         var periodsPerHour = {}
-        for(var j = 0; j <= 23; j++) {
-            for(var k = 0; k <= 6; k++) {
-                for(var l = 0; l <= 6; l++) {
-                    var sigID = "#"+k+"-"+j+"-"+l+"-sig"
-                    var muID = "#"+k+"-"+j+"-"+l+"-mu"
+        //for(var j = 0; j <= 23; j++) {          //24 hours
+            //for(var k = 0; k <= 6; k++) {       //7 days
+                for(var l = 0; l <= 5; l++) {   //every 10 min
+                    //var sigID = "#"+k+"-"+j+"-"+l+"-sig"
+                    //var muID = "#"+k+"-"+j+"-"+l+"-mu"
+                    var sigID = "#"+l+"-sig"
+                    var muID = "#"+l+"-mu"
                     var sig = $(sigID).val()
                     var mu = $(muID).val()
                     periodsPerHour[sigID] = sig
                     periodsPerHour[muID] = mu
                 }
-            }
-        }
+            //}
+        //}
         var toSave = JSON.stringify(periodsPerHour)
         localStorage.setItem("periodsPerHour", toSave)
     }
@@ -785,16 +789,18 @@ function init(){
         console.log("Loading periodsPerHour")
         var periodsPerHour = JSON.parse(localStorage.getItem("periodsPerHour"))
         if(periodsPerHour) {
-            for(var j = 0; j <= 23; j++) {
-                for(var k = 0; k <= 6; k++) {
-                    for(var l = 0; l <= 6; l++) {
-                        var sigID = "#"+k+"-"+j+"-"+l+"-sig"
-                        var muID = "#"+k+"-"+j+"-"+l+"-mu"
+            //for(var j = 0; j <= 23; j++) {
+                //for(var k = 0; k <= 5; k++) {       //10min interval
+                    for(var l = 0; l <= 5; l++) {   
+                        //var sigID = "#"+k+"-"+j+"-"+k+"-sig"
+                        //var muID = "#"+k+"-"+j+"-"+k+"-mu"
+                        var sigID = "#"+l+"-sig"
+                        var muID = "#"+l+"-mu"
                         $(sigID).val(periodsPerHour[sigID])
                         $(muID).val(periodsPerHour[muID])
                     }
-                }
-            }
+                //}
+            //}
         }
     }
 
@@ -847,7 +853,26 @@ function init(){
         var hour = now.getHours()
         var day = now.getDay()
         var minute = now.getMinutes()
+        var min = Math.floor(minute/10)
 
+        console.log("createDataPeriodicForTimePerHour generate preiodic data")
+
+        var muInput = "#"+min+"-mu"
+        var sigInput = "#"+min+"-sig"
+        console.log("muInput is " + muInput + "sigamInput is " + sigInput)
+        var mu = parseInt($(muInput).val())
+        var sigma = parseInt($(sigInput).val())
+
+        var nextMin
+        if(min < 5)
+            nextMin = min + 1
+        else
+            nextMin = 0
+        var nextMu = parseInt($("#"+nextMin+"-mu").val())
+        var nextSigma = parseInt($("#"+nextMin+"-sig").val())
+        console.log("next mu is " + nextMu + "sigam is " + nextSigma)
+
+        /*
         var muInput = "#"+day+"-"+hour+"-"+minute+"-mu"
         var sigInput = "#"+day+"-"+hour+"-"+minute+"-sig"
         console.log("muInput is " + muInput + "sigamInput is " + sigInput)
@@ -889,11 +914,8 @@ function init(){
 
             mu = adjustForMinute(mu, minute, nextMu)
             sigma = adjustForMinute(sigma, minute, nextSigma)
-        }
-
-        console.log("createDataPeriodicForTimePerHour generate preiodic data")
-        console.log("mu is " + mu + "sigam is " + sigma)
-        console.log("next mu is " + nextMu + "sigam is " + nextSigma)
+        }*/
+        
         generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
