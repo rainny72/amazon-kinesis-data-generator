@@ -261,9 +261,9 @@ function init(){
         }
     }
 
-    // Add 1 hour and 1 day test
+    // 1 hour load generate. Separeate with 10 minutes. 1hour 6 step
     var pi2 = $("#periodic-inputs2")
-    for(var j = 0; j <= 23; j++) {
+    for(var j = 0; j <= 5; j++) {
         var tr = $( "<tr /> " )
         pi2.append(tr)
         var th = $( "<th scope='row'>"+j+"</th>" )
@@ -274,16 +274,19 @@ function init(){
             mID = k+"-"+j+"-mu"
             mInput = $( "<small>Mu:</small><input type='number' min='0' class='form-control' id='"+mID+"' value='100'/>" )
             td.append(mInput)
-            $("#"+mID).blur(savePeriods)
+            $("#"+mID).blur(savePeriodsPerHour)
             sID = k+"-"+j+"-sig"
             sInput = $( "<small>Sigma:</small><input type='number' min='0' class='form-control' id='"+sID+"' value='10'/>" )
             td.append(sInput)
-            $("#"+sID).blur(savePeriods)
+            $("#"+sID).blur(savePeriodsPerHour)
         }
     }
 
     // Load previously-keyed periodic config
     loadPeriods()
+
+    // Load for Hour test pattern
+    loadPeriodsPerHour()
 
     $("#rate-tabs").tabs();
 
@@ -476,7 +479,9 @@ function init(){
     function createDataPeriodic()
     {
         recordsToPush = []
-        createDataPeriodicForTime(new Date(), recordsToPush)
+        //check day periodic or hour periodic
+        //createDataPeriodicForTime(new Date(), recordsToPush)
+        createDataPeriodicForTimePerHour(new Date(), recordsToPush)
         sendToKinesis(recordsToPush)
         $("#recordsSentMessage").text(totalRecordsSent.toString() + " records sent to Kinesis.");
     }
@@ -733,6 +738,135 @@ function init(){
         if(records.length > 0){
             recordsToPush.push(...records);
         }        
+    }
+
+    //add for 1 hour periodic test
+
+    function savePeriodsPerHour() {
+        var periodsPerHour = {}
+        for(var j = 0; j <= 23; j++) {
+            for(var k = 0; k <= 6; k++) {
+                for(var l = 0; l <= 6; l++) {
+                    var sigID = "#"+k+"-"+j+"-"+l+"-sig"
+                    var muID = "#"+k+"-"+j+"-"+l+"-mu"
+                    var sig = $(sigID).val()
+                    var mu = $(muID).val()
+                    periodsPerHour[sigID] = sig
+                    periodsPerHour[muID] = mu
+                }
+            }
+        }
+        var toSave = JSON.stringify(periodsPerHour)
+        localStorage.setItem("periodsPerHour", toSave)
+    }
+
+    function loadPeriodsPerHour() {
+        console.log("Loading periodsPerHour")
+        var periodsPerHour = JSON.parse(localStorage.getItem("periodsPerHour"))
+        if(periodsPerHour) {
+            for(var j = 0; j <= 23; j++) {
+                for(var k = 0; k <= 6; k++) {
+                    for(var l = 0; l <= 6; l++) {
+                        var sigID = "#"+k+"-"+j+"-"+l+"-sig"
+                        var muID = "#"+k+"-"+j+"-"+l+"-mu"
+                        $(sigID).val(periodsPerHour[sigID])
+                        $(muID).val(periodsPerHour[muID])
+                    }
+                }
+            }
+        }
+    }
+
+    function generatePeriodicDataPerHour(day, hour, minute, mu, sigma, recordsToPush) {
+        var count = normal(mu, sigma)
+
+
+        debugColl.push(count)
+        var maxRecordsTotal = 500,
+            records = [];
+    
+        var template = getCleanedTemplate();
+    
+        for(var n = 0; n < count; n++) {
+            var data = faker.fake(template);
+    
+            if($("#zipped").is(':checked')){
+                var pako = window.pako;
+                data = pako.gzip(data);
+            } else {
+                data = data + '\n';
+            }
+    
+            var record = {
+                "Data": data
+            };
+            if(streamType === "stream"){
+                record.PartitionKey = (Math.floor(Math.random() * (10000000000))).toString();
+            }
+            records.push(record);
+            if(records.length === maxRecordsTotal){
+                sendToKinesis(records);
+                records = [];
+            }
+        }
+    
+        if(records.length > 0){
+            recordsToPush.push(...records);
+        }        
+    }
+
+    function createDataPeriodicForTimePerHour(dateTime, recordsToPush) {
+        if(typeof recordsToPush === "undefined") {
+            recordsToPush = []
+        }
+        var now = dateTime;
+
+        var hour = now.getHours()
+        var day = now.getDay()
+        var minute = now.getMinutes()
+
+        var muInput = "#"+day+"-"+hour+"-"+minute+"-mu"
+        var sigInput = "#"+day+"-"+hour+"-"+minute+"-sig"
+
+        var mu = parseInt($(muInput).val())
+        var sigma = parseInt($(sigInput).val())
+
+        if($("#smoothing").is(':checked')) {
+            var prevHour;
+            var prevDay;
+            var nextHour;
+            var nextDay;
+            if(hour > 0) {
+                prevHour = hour - 1
+                prevDay = day
+            } else {
+                prevHour = 23
+                if(day > 0) {
+                    prevDay = day - 1
+                } else {
+                    prevDay = 6
+                }
+            }
+            if(hour < 22) {
+                nextHour = hour + 1;
+                nextDay = day;
+            } else {
+                nextHour = 0;
+                if(nextDay < 6) {
+                    nextDay = day + 1
+                } else {
+                    nextDay = 0
+                }
+            }
+
+            nextMu = parseInt($("#"+nextDay+"-"+nextHour+"-"+minute+"-mu").val())
+            nextSigma = parseInt($("#"+nextDay+"-"+nextHour+"-"+minute+"-sig").val())
+
+            mu = adjustForMinute(mu, minute, nextMu)
+            sigma = adjustForMinute(sigma, minute, nextSigma)
+        }
+
+        generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
 
