@@ -885,6 +885,7 @@ function init(){
 
         console.log("createDataPeriodicForTimePerHour generate preiodic data")
         console.log("mu is " + mu + "sigam is " + sigma)
+        console.log("next mu is " + nextMu + "sigam is " + nextSigma)
         generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
