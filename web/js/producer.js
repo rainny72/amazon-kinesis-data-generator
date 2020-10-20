@@ -261,6 +261,27 @@ function init(){
         }
     }
 
+    // Add 1 hour and 1 day test
+    var pi2 = $("#periodic-inputs")
+    for(var j = 0; j <= 23; j++) {
+        var tr = $( "<tr /> " )
+        pi2.append(tr)
+        var th = $( "<th scope='row'>"+j+"</th>" )
+        tr.append(th)
+        for(var k = 0; k <= 1; k++) {
+            var td = $ ( "<td />")
+            tr.append(td)
+            mID = k+"-"+j+"-mu"
+            mInput = $( "<small>Mu:</small><input type='number' min='0' class='form-control' id='"+mID+"' value='100'/>" )
+            td.append(mInput)
+            $("#"+mID).blur(savePeriods)
+            sID = k+"-"+j+"-sig"
+            sInput = $( "<small>Sigma:</small><input type='number' min='0' class='form-control' id='"+sID+"' value='10'/>" )
+            td.append(sInput)
+            $("#"+sID).blur(savePeriods)
+        }
+    }
+
     // Load previously-keyed periodic config
     loadPeriods()
 
