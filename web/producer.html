@@ -128,18 +128,18 @@
                         <div id="rate-tabs">
                             <ul class="nav nav-tabs" id="rate-tabs">
                                 <li class="rate-tab nav-item active"><a href="#constant-rate-tab" id="rate-tab-0" class="nav-link active">Constant</a></li>
-                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab" id="rate-tab-1" class="nav-link active">Periodic Test</a></li>
-                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab2" id="rate-tab-2" class="nav-link active">Short Periodic</a></li>
-                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab3" id="rate-tab-3" class="nav-link active">Tab Test</a></li>
+                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab-3" id="rate-tab-3" class="nav-link active">Tab Test</a></li>
+                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab-1" id="rate-tab-1" class="nav-link active">Periodic Test</a></li>
+                                <li class="rate-tab nav-item"><a href="#periodic-rate-tab-2" id="rate-tab-2" class="nav-link active">Short Periodic</a></li>  
                             </ul>
                             <div id="constant-rate-tab" class="tab-content" style="padding-top: 20px">
                                 <input type="number" min="1" max="2000" step="1" class="form-control" id="putRate" placeholder="Kinesis Stream Name" value="100" />
                             </div>
-                            <div id="constant-rate-tab3" class="tab-content" style="padding-top: 20px">
+                            <div id="periodic-rate-tab-3" class="tab-content" style="padding-top: 20px">
                                 <input type="number" min="1" max="2000" step="1" class="form-control" id="putRate" placeholder="Kinesis Stream Name" value="100" />
                             </div>
                             <!-- Periodic rate tab -->
-                            <div id="periodic-rate-tab" class="container-fluid" style="padding-top: 20px">
+                            <div id="periodic-rate-tab-1" class="container-fluid" style="padding-top: 20px">
                                 <div class="form-group row">
                                     <label for="smoothing" class="col-md-2 col-form-label">Intra-hour smoothing</label>
                                     <div class="col-md-4">
@@ -240,7 +240,7 @@
                                 </div>
                             </div>
                             <!-- Loat Test Pattern rate tab -->
-                            <div id="periodic-rate-tab2" class="container-fluid" style="padding-top: 20px">
+                            <div id="periodic-rate-tab-2" class="container-fluid" style="padding-top: 20px">
                                 <div class="form-group row">
                                     <label for="smoothing" class="col-md-2 col-form-label">Intra-hour smoothing</label>
                                     <div class="col-md-4">
@@ -335,6 +335,7 @@
                                     </table>
                                 </div>
                             </div>
+                            <!-- End Loat Test Pattern rate tab -->
                             </div>
                         </div>
                     </div>
