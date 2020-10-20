@@ -462,7 +462,7 @@ function init(){
                     createDataPeriodicForTimePerHour(simTime, recordsToPush)
                 simTime.setSeconds(simTime.getSeconds() + 1)
             }
-            console.log("send to kinesis : " + recordsToPush)
+            //console.log("send to kinesis : " + recordsToPush)
             sendToKinesis(recordsToPush)
             $("#recordsSentMessage").text(totalRecordsSent.toString() + " records sent to Kinesis.  SimTime: "+simTime.toString());
             yield simTime;
@@ -489,11 +489,11 @@ function init(){
         //check day periodic or hour periodic
         var currRate = $("ul#rate-tabs li.active").text()
         if(currRate == "Day Periodic") {
-            console.log("Create Data Periodic for "+currRate)
+            //console.log("Create Data Periodic for "+currRate)
             createDataPeriodicForTime(new Date(), recordsToPush)
         }
         else {
-            console.log("Create Data Periodic for "+currRate)
+            //console.log("Create Data Periodic for "+currRate)
             createDataPeriodicForTimePerHour(new Date(), recordsToPush)
         }
         console.log("createDataPeriodic send to kinesis : " + recordsToPush)
@@ -555,7 +555,7 @@ function init(){
             sigma = adjustForMinute(sigma, minute, nextSigma)
         }
 
-        console.log("createDataPeriodicForTime generate preiodic data")
+        console.log("Generate minute-preiodic data")
         console.log("mu is " + mu + "sigam is " + sigma)
         console.log("next mu is " + nextMu + "sigam is " + nextSigma)
         generatePeriodicData(day, hour, parseFloat(mu), parseFloat(sigma), recordsToPush)
@@ -804,7 +804,7 @@ function init(){
         }
     }
 
-    function generatePeriodicDataPerHour(day, hour, minute, mu, sigma, recordsToPush) {
+    function generatePeriodicDataPerHour(mu, sigma, recordsToPush) {
         var count = normal(mu, sigma)
 
 
@@ -813,7 +813,7 @@ function init(){
             records = [];
     
         var template = getCleanedTemplate();
-        console.log("generate data as " + template)
+        //console.log("generate data as " + template)
     
         for(var n = 0; n < count; n++) {
             var data = faker.fake(template);
@@ -859,7 +859,7 @@ function init(){
 
         var muInput = "#"+min+"-mu"
         var sigInput = "#"+min+"-sig"
-        console.log("muInput is " + muInput + "sigamInput is " + sigInput)
+        console.log("muInput is " + muInput + ", sigamInput is " + sigInput)
         var mu = parseInt($(muInput).val())
         var sigma = parseInt($(sigInput).val())
 
@@ -870,53 +870,9 @@ function init(){
             nextMin = 0
         var nextMu = parseInt($("#"+nextMin+"-mu").val())
         var nextSigma = parseInt($("#"+nextMin+"-sig").val())
-        console.log("next mu is " + nextMu + "sigam is " + nextSigma)
+        console.log("next mu is " + nextMu + ", sigam is " + nextSigma)
 
-        /*
-        var muInput = "#"+day+"-"+hour+"-"+minute+"-mu"
-        var sigInput = "#"+day+"-"+hour+"-"+minute+"-sig"
-        console.log("muInput is " + muInput + "sigamInput is " + sigInput)
-
-        var mu = parseInt($(muInput).val())
-        var sigma = parseInt($(sigInput).val())
-        console.log("mu is " + mu + "sigam is " + sigma)
-
-        if($("#smoothing").is(':checked')) {
-            var prevHour;
-            var prevDay;
-            var nextHour;
-            var nextDay;
-            if(hour > 0) {
-                prevHour = hour - 1
-                prevDay = day
-            } else {
-                prevHour = 23
-                if(day > 0) {
-                    prevDay = day - 1
-                } else {
-                    prevDay = 6
-                }
-            }
-            if(hour < 22) {
-                nextHour = hour + 1;
-                nextDay = day;
-            } else {
-                nextHour = 0;
-                if(nextDay < 6) {
-                    nextDay = day + 1
-                } else {
-                    nextDay = 0
-                }
-            }
-
-            nextMu = parseInt($("#"+nextDay+"-"+nextHour+"-"+minute+"-mu").val())
-            nextSigma = parseInt($("#"+nextDay+"-"+nextHour+"-"+minute+"-sig").val())
-
-            mu = adjustForMinute(mu, minute, nextMu)
-            sigma = adjustForMinute(sigma, minute, nextSigma)
-        }*/
-        
-        generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
+        generatePeriodicDataPerHour(parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
 
