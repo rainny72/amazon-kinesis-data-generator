@@ -550,6 +550,9 @@ function init(){
             sigma = adjustForMinute(sigma, minute, nextSigma)
         }
 
+        console.log("createDataPeriodicForTime generate preiodic data")
+        console.log("mu is " + mu + "sigam is " + sigma)
+        console.log("next mu is " + nextMu + "sigam is " + nextSigma)
         generatePeriodicData(day, hour, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 
