@@ -515,6 +515,9 @@ function init(){
         var mu = parseInt($(muInput).val())
         var sigma = parseInt($(sigInput).val())
 
+        console.log("muInput is " + muInput + "sigamInput is " + sigInput)
+        console.log("mu is " + mu + "sigam is " + sigma)
+
         if($("#smoothing").is(':checked')) {
             var prevHour;
             var prevDay;
@@ -847,9 +850,11 @@ function init(){
 
         var muInput = "#"+day+"-"+hour+"-"+minute+"-mu"
         var sigInput = "#"+day+"-"+hour+"-"+minute+"-sig"
+        console.log("muInput is " + muInput + "sigamInput is " + sigInput)
 
         var mu = parseInt($(muInput).val())
         var sigma = parseInt($(sigInput).val())
+        console.log("mu is " + mu + "sigam is " + sigma)
 
         if($("#smoothing").is(':checked')) {
             var prevHour;
