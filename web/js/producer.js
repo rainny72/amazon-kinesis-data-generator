@@ -262,7 +262,7 @@ function init(){
     }
 
     // Add 1 hour and 1 day test
-    var pi2 = $("#periodic-inputs")
+    var pi2 = $("#periodic-inputs2")
     for(var j = 0; j <= 23; j++) {
         var tr = $( "<tr /> " )
         pi2.append(tr)
