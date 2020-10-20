@@ -494,6 +494,7 @@ function init(){
             console.log("Create Data Periodic for "+currRate)
             createDataPeriodicForTimePerHour(new Date(), recordsToPush)
         }
+        console.log("createDataPeriodic send to kinesis : " + recordsToPush)
         sendToKinesis(recordsToPush)
         $("#recordsSentMessage").text(totalRecordsSent.toString() + " records sent to Kinesis.");
     }
@@ -609,9 +610,11 @@ function init(){
     }
 
     function sendToKinesis(data) {
+        console.log("sendToKinesis : " + data.length)
         if (data.length > 500) {
             toSend = divide_array(data, 500)
             for(var i = 0; i < toSend.length; i++) {
+                console.log("sending data is " + toSend[i])
                 sendToKinesisChunked(toSend[i])
             }
         } 
@@ -880,7 +883,7 @@ function init(){
             sigma = adjustForMinute(sigma, minute, nextSigma)
         }
 
-        console.log("generate preiodic data")
+        console.log("createDataPeriodicForTimePerHour generate preiodic data")
         generatePeriodicDataPerHour(day, hour, minute, parseFloat(mu), parseFloat(sigma), recordsToPush)
     }
 }
